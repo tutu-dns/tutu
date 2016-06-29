@@ -1,5 +1,0 @@
-test:
-  pre:
-    - "py.test tutu/tests.py":
-       environment:
-         PYTHONPATH: $PWD
