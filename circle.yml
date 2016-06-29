@@ -1,5 +1,5 @@
 test:
   pre:
-    - "py.test tutu/test.py":
+    - "py.test tutu/tests.py":
        environment:
          PYTHONPATH: $PWD
