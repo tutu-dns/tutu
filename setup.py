@@ -3,6 +3,8 @@ from setuptools import setup
 requires = [
 	'pyramid',
 	'pyramid_chameleon'
+	'pytest',
+	'webtest',
 ]
 
 setup(name='tutu',
