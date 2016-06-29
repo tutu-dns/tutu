@@ -1,0 +1,5 @@
+test:
+  pre:
+    - "py.test-3 -vv ./tests/":
+       environment:
+         PYTHONPATH: $PWD
