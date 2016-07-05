@@ -2,5 +2,9 @@ machine:
   python:
     version: 3.4.3
 test:
+  pre:
+    - python testing/pre.py
   override:
     - py.test tutu/tests.py
+  post:
+    - python testing/post.py

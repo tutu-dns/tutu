@@ -7,9 +7,6 @@ import os.path
 class TutuViewTests(unittest.TestCase):
 	def setUp(self):
 		self.config = testing.setUp();
-		if os.path.isfile('tutu.cfg'):
-			shutil.move('tutu.cfg', 'tutu.cfg.orig');
-		shutil.copy('testing/tutu.cfg', 'tutu.cfg');
 	
 	def tearDown(self):
 		testing.tearDown();
