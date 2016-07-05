@@ -7,6 +7,7 @@ requires = [
 	'webtest',
 	'dnspython3',
 	'sqlalchemy',
+	'configparser',
 ]
 
 setup(name='tutu',
