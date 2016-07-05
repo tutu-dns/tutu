@@ -1,0 +1,51 @@
+<html metal:use-macro="load: base.pt">
+	<div metal:fill-slot="pagetitle" tal:omit-tag="">${zonename}</div>
+	<div metal:fill-slot="body">
+		<div class="row">
+			<div class="col-md-12">
+				<h1 class="page-head-line">Zone Details: ${zonename}</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="table-responsive table-bordered ">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Record</th>
+								<th>Type</th>
+								<th>TTL</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr tal:repeat="record records">
+								<td>
+									<a tal:condition="not: record['type'] == 'SOA'" href="/record/edit?zone=${zonename}&name=${record['name']}&type=${record['type']}&value=${record['value']}">
+										${record['name']}
+									</a>
+									<a tal:condition="record['type'] == 'SOA'" href="/record/edit?zone=${zonename}&name=${record['name']}&type=${record['type']}">
+										${record['name']}
+									</a>
+								</td>
+								<td>${record['type']}</td>
+								<td>${record['ttl']}</td>
+								<td>${structure: record['value']}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="btn-group" style="margin-top: 20px;">
+					<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">
+						Add Record <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li tal:repeat="rtype rtypes">
+							<a href="/record/create?type=${rtype}&zone=${zonename}">${rtype}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</html>

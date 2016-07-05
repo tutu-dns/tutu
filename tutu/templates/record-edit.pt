@@ -1,0 +1,51 @@
+<html metal:use-macro="load: base.pt">
+<div metal:fill-slot="pagetitle" tal:omit-tag="" tal:condition="newrecord==True">Create ${rtype} record</div>
+	<div tal:condition="newrecord==False">
+		<div metal:fill-slot="pagetitle" tal:omit-tag="">Edit ${rtype} record: ${pname}</div>
+	</div>
+	<div tal:condition="newrecord==True">
+		<div metal:fill-slot="pagetitle" tal:omit-tag="">Create ${rtype} record</div>
+	</div>
+	<div metal:fill-slot="body">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-info">
+					<div class="panel-heading" tal:condition="newrecord==False">Edit ${rtype} record: ${pname}</div>
+					<div class="panel-heading" tal:condition="newrecord==True">Create ${rtype} record</div>
+					<div class="panel-body">
+						<form role="form" action="/record/save" method="post">
+							<div class="form-group">
+								<label>Record name</label>
+								<input class="form-control" type="text" value="${rname}" name="name" />
+								<p class="help-block">Don't include zone suffix (${rzone})</p>
+							</div>
+							<div class="form-group">
+								<label>Type</label>
+								<input class="form-control" type="text" value="${rtype}" name="rtype-d" disabled />
+							</div>
+							<div tal:repeat="attrib record" tal:omit-tag="">
+								<div class="form-group" tal:attributes="class python:errors[attrib['name']] > 0 and 'has-error' or ''">
+									<label>${helpers[attrib['name']]['label']}</label>
+									<input class="form-control" type="${helpers[attrib['name']]['type']}"
+												 name="${attrib['name']}" value="${attrib['value']}" />
+									<p class="help-block">${helpers[attrib['name']]['help']}</p>
+								</div>
+							</div>
+							<div class="form-group">
+								<div tal:condition="newrecord==False" tal:omit-tag="">
+									<input type="submit" class="btn btn-success" value="Save" />
+									<a class="btn btn-danger" href="/record/delete?zone=${rzone}&name=${rname}&value=${rvalue}">
+										Delete Record
+									</a>
+								</div>
+								<div tal:condition="newrecord==True" tal:omit-tag="">
+									<input type="submit" class="btn btn-success" value="Create" />
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</html>

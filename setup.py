@@ -5,6 +5,8 @@ requires = [
 	'pyramid_chameleon',
 	'pytest',
 	'webtest',
+	'dnspython3',
+	'sqlalchemy',
 ]
 
 setup(name='tutu',
@@ -14,4 +16,3 @@ setup(name='tutu',
 	main = tutu:main
 	""",
 );
-
