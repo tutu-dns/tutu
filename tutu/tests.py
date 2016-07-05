@@ -1,13 +1,18 @@
 import unittest
 
 from pyramid import testing
+import shutil
 
 class TutuViewTests(unittest.TestCase):
 	def setUp(self):
 		self.config = testing.setUp();
+		shutil.move('tutu.cfg', 'tutu.cfg.orig');
+		shutil.copy('testing/tutu.cfg', 'tutu.cfg');
 	
 	def tearDown(self):
 		testing.tearDown();
+		shutil.move('tutu.cfg.orig', 'tutu.cfg');
+		
 	
 	def test_userlogin(self):
 		from tutu.auth import Auth;

@@ -16,10 +16,10 @@ class Auth(ViewBase):
 			password = self.request.POST.get('password');
 			if database.check_login(username, password):
 				headers = security.remember(self.request, username);
-				if self.request.session['nexturl']:
+				try:
 					loc = self.request.session['nexturl'];
 					del self.request.session['nexturl'];
-				else:
+				except KeyError:
 					loc = '/';
 				return HTTPFound(location=loc, headers=headers);
 			else:
