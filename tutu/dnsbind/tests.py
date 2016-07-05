@@ -2,8 +2,6 @@ import unittest
 
 from pyramid import testing
 
-import tutu.dnsbind.tests
-
 class TutuViewTests(unittest.TestCase):
 	def setUp(self):
 		self.config = testing.setUp();
@@ -11,7 +9,7 @@ class TutuViewTests(unittest.TestCase):
 	def tearDown(self):
 		testing.tearDown();
 	
-	def test_userlogin(self):
+	def test_zonelist(self):
 		from tutu.auth import Auth;
 		
 		request = testing.DummyRequest();
