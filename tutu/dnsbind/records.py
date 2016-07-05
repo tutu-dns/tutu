@@ -7,9 +7,10 @@ from dns import node, zone
 import dns.rdata, dns.rdataset;
 from tutu import tutuconfig
 
-from .namedconfparser import NamedConfParser
-from .viewbase import ViewBase
+from tutu.dnsbind.namedconfparser import NamedConfParser
+from tutu.viewbase import ViewBase
 from tutu import tutuconfig;
+from tutu.dnsbind.recordhelpers import helpers
 
 class Records(ViewBase):
 	
@@ -18,10 +19,9 @@ class Records(ViewBase):
 	
 	def __init__(self, request):
 		super().__init__(request);
-		from tutu.recordhelpers import helpers
 		self.helpers = helpers;
 	
-	@view_config(route_name='record_edit', renderer='templates/record-edit.pt', permission='record.edit')
+	@view_config(route_name='record_edit', renderer='tutu:templates/record-edit.pt', permission='record.edit')
 	def edit(self):
 		rzone = self.request.params.get('zone', None);
 		rname = self.request.params.get('name', None);
@@ -87,7 +87,7 @@ class Records(ViewBase):
 		return {'rname': rname, 'pname':pname, 'rzone': rzone, 'rtype': rtype, 'rvalue': rvalue,
 						'record': record, 'helpers':self.helpers, 'errors': errors, 'newrecord': False};
 	
-	@view_config(route_name='record_create', renderer='templates/record-edit.pt', permission='record.edit')
+	@view_config(route_name='record_create', renderer='tutu:templates/record-edit.pt', permission='record.edit')
 	def create(self):
 		rzone = self.request.params.get('zone', None);
 		
@@ -100,8 +100,8 @@ class Records(ViewBase):
 			print('Type');
 			return HTTPFound(location='/zone/{}'.format(rzone));
 		
-		import tutu.zones;
-		if tutu.zones.Zones(None).is_reverse(rzone):
+		import tutu.dnsbind.zones;
+		if tutu.dnsbind.zones.Zones(None).is_reverse(rzone):
 			types = self.reverse_supported_types;
 		else:
 			types = self.forward_supported_types;
@@ -130,7 +130,7 @@ class Records(ViewBase):
 		return {'rname': '', 'pname':'', 'rzone': rzone, 'rtype': rtype,
 						'record': record, 'helpers':self.helpers, 'errors': errors, 'newrecord': True};
 	
-	@view_config(route_name='record_save', renderer='templates/record-edit.pt', permission='record.edit')
+	@view_config(route_name='record_save', renderer='tutu:templates/record-edit.pt', permission='record.edit')
 	def save(self):
 		values = {};
 		if self.request.method in ['POST', 'PUT']:
@@ -239,7 +239,7 @@ class Records(ViewBase):
 		else:
 			print("Not post or put");
 	
-	@view_config(route_name='record_delete', renderer='templates/record-edit.pt', permission='record.edit')
+	@view_config(route_name='record_delete', renderer='tutu:templates/record-edit.pt', permission='record.edit')
 	def delete(self):
 			session = self.request.session;
 			try:

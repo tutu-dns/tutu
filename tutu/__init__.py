@@ -31,8 +31,8 @@ def main(global_config, **settings):
 	config.add_route('auth_logout', '/logout');
 	
 	config.scan('.views');
-	config.scan('.zones');
-	config.scan('.records');
+	config.scan('.dnsbind.zones');
+	config.scan('.dnsbind.records');
 	config.scan('.auth');
 	config.add_static_view(name='assets', path='tutu:assets');
 	return config.make_wsgi_app();

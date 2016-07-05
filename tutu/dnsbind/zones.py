@@ -1,8 +1,8 @@
 from pyramid.response import Response
 from pyramid.view import view_config
-from .namedconfparser import NamedConfParser
-from .viewbase import ViewBase
-import tutu.records;
+from tutu.dnsbind.namedconfparser import NamedConfParser
+from tutu.viewbase import ViewBase
+import tutu.dnsbind.records;
 from dns import zone, rdatatype as rdt;
 import re
 from tutu import tutuconfig;
@@ -32,7 +32,7 @@ class Zones(ViewBase):
 		
 		return recordcount;
 	
-	@view_config(route_name='zone_list', renderer='templates/zone-list.pt', permission='zone.list')
+	@view_config(route_name='zone_list', renderer='tutu:templates/zone-list.pt', permission='zone.list')
 	def list(self):
 		namedconf = tutuconfig.get('namedconf');
 		ncp = NamedConfParser();
@@ -46,7 +46,7 @@ class Zones(ViewBase):
 		
 		return {'zones':rzones};
 	
-	@view_config(route_name='zone_show', renderer='templates/zone-show.pt', permission='zone.show')
+	@view_config(route_name='zone_show', renderer='tutu:templates/zone-show.pt', permission='zone.show')
 	def show(self):
 		zonename = self.request.matchdict['zone'];
 		namedconf = tutuconfig.get('namedconf');
@@ -72,9 +72,9 @@ class Zones(ViewBase):
 					records.append(record);
 		
 		if self.is_reverse(z.origin):
-			rtypes = tutu.records.Records.reverse_supported_types;
+			rtypes = tutu.dnsbind.records.Records.reverse_supported_types;
 		else:
-			rtypes = tutu.records.Records.forward_supported_types;
+			rtypes = tutu.dnsbind.records.Records.forward_supported_types;
 		
 		return {'zonename': zonename, 'records':records, 'rtypes': rtypes};
 
