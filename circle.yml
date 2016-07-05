@@ -1,6 +1,6 @@
 machine:
-	python:
-		version: 3.4.3
+  python:
+    version: 3.4.3
 test:
-	override:
-		- py.test tutu/tests.py
+  override:
+    - py.test tutu/tests.py
