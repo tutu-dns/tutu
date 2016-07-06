@@ -13,21 +13,31 @@ class TutuViewTests(unittest.TestCase):
 		
 	
 	def test_userlogin(self):
-		from tutu.auth import Auth;
+		from tutu.views.viewauth import ViewAuth;
 		
 		request = testing.DummyRequest();
-		auth = Auth(request);
+		auth = ViewAuth(request);
 		response = auth.login();
 		self.assertEqual(response['user'], '');
 		self.assertEqual(response['error'], '');
+		
 	def test_userlogout(self):
-		from tutu.auth import Auth;
+		from tutu.views.viewauth import ViewAuth;
 		
 		self.config.testing_securitypolicy(userid='admin', permissive=True);
 		
 		request = testing.DummyRequest();
-		auth = Auth(request);
+		auth = ViewAuth(request);
 		response = auth.logout();
+	
+	def test_dashboard(self):
+		from tutu.views.viewdashboard import ViewDashboard;
+		
+		self.config.testing_securitypolicy(userid='admin', permissive=True);
+		
+		request = testing.DummyRequest();
+		dash = ViewDashboard(request);
+		response = dash.show();
 
 class TutuFunctionalTests(unittest.TestCase):
 	def setUp(self):
@@ -40,6 +50,15 @@ class TutuFunctionalTests(unittest.TestCase):
 	def test_userlogin(self):
 		res = self.testapp.get('/login', status=200);
 		self.assertIn(b'Please enter your details', res.body);
+		
+		form = res.form;
+		form['username'] = 'admin';
+		print(form['username'].value);
+		form['password'] = 'changeme';
+		print(form['password'].value);
+		
+		res2 = form.submit();
+		self.assertEqual(res2.status, '302 Found');
 	
 	def test_userlogout(self):
 		res = self.testapp.get('/logout', status=302);

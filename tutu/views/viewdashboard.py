@@ -5,7 +5,7 @@ from tutu.viewbase import ViewBase
 
 class ViewDashboard(ViewBase):
 	@view_config(route_name='home', renderer='tutu:templates/home.pt', permission='dashboard.view')
-	def home(self):
+	def show(self):
 		return {'name': 'Home View'};
 
 
