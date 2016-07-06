@@ -1,4 +1,4 @@
-from .viewbase import ViewBase
+from tutu.viewbase import ViewBase
 from pyramid.view import view_config, forbidden_view_config
 from pyramid.response import Response
 from pyramid import security
@@ -6,8 +6,8 @@ from pyramid.httpexceptions import HTTPFound
 
 from tutu import database
 
-class Auth(ViewBase):
-	@view_config(route_name='auth_login', renderer='templates/login.pt', permission='auth.login')
+class ViewAuth(ViewBase):
+	@view_config(route_name='auth_login', renderer='tutu:templates/login.pt', permission='auth.login')
 	def login(self):
 		error = '';
 		username = '';
@@ -26,7 +26,7 @@ class Auth(ViewBase):
 				error = 'Invalid username or password';
 		return {'error':error, 'user':username}
 	
-	@view_config(route_name='auth_logout', renderer='templates/login.pt', permission='auth.logout')
+	@view_config(route_name='auth_logout', renderer='tutu:templates/login.pt', permission='auth.logout')
 	def logout(self):
 		headers = security.forget(self.request);
 		return HTTPFound(location='/login', headers=headers);

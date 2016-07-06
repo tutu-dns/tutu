@@ -2,35 +2,12 @@ from pyramid.response import Response
 from pyramid.view import view_config
 from tutu.dnsbind.namedconfparser import NamedConfParser
 from tutu.viewbase import ViewBase
-import tutu.dnsbind.records;
+from tutu.dnsbind import zone as tutuzone, record as tuturecord;
 from dns import zone, rdatatype as rdt;
 import re
 from tutu import tutuconfig;
 
-class Zones(ViewBase):
-	
-	def is_reverse(self, origin):
-		if type(origin) != str:
-			origin = origin.to_text();
-		match = re.search('(?:addr|ip6)\.arpa(?:\.?)$', origin);
-		if match is not None:
-			return True;
-		else:
-			return False;
-	
-	def _count_records(self, zonename):
-		namedconf = tutuconfig.get('namedconf');
-		ncp = NamedConfParser();
-		ncp.from_file(namedconf);
-		zonefile = ncp.find_zone_file(zonename);
-		
-		z  = zone.from_file(zonefile);
-		recordcount = 0;
-		for node in z.nodes:
-			for rds in z.nodes[node].rdatasets:
-				recordcount += len(rds.items);
-		
-		return recordcount;
+class ViewZones(ViewBase):
 	
 	@view_config(route_name='zone_list', renderer='tutu:templates/zone-list.pt', permission='zone.list')
 	def list(self):
@@ -42,7 +19,7 @@ class Zones(ViewBase):
 		
 		
 		for zone in zones:
-			rzones.append({'name': zone, 'records': self._count_records(zone)});
+			rzones.append({'name': zone, 'records': tutuzone._count_records(zone)});
 		
 		return {'zones':rzones};
 	
@@ -71,10 +48,10 @@ class Zones(ViewBase):
 					record['ttl'] = dset.ttl;
 					records.append(record);
 		
-		if self.is_reverse(z.origin):
-			rtypes = tutu.dnsbind.records.Records.reverse_supported_types;
+		if tutuzone.is_reverse(z.origin):
+			rtypes = tuturecord.reverse_supported_types;
 		else:
-			rtypes = tutu.dnsbind.records.Records.forward_supported_types;
+			rtypes = tuturecord.forward_supported_types;
 		
 		return {'zonename': zonename, 'records':records, 'rtypes': rtypes};
 

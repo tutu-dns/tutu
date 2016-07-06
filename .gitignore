@@ -90,3 +90,6 @@ ENV/
 
 # tutu configuration file
 tutu.cfg
+
+# Mac OS
+.DS_Store

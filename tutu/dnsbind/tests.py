@@ -13,18 +13,11 @@ class TutuViewTests(unittest.TestCase):
 		from tutu.auth import Auth;
 		
 		request = testing.DummyRequest();
-		auth = Auth(request);
-		response = auth.login();
-		self.assertEqual(response['user'], '');
-		self.assertEqual(response['error'], '');
+    
 	def test_userlogout(self):
 		from tutu.auth import Auth;
 		
 		self.config.testing_securitypolicy(userid='admin', permissive=True);
-		
-		request = testing.DummyRequest();
-		auth = Auth(request);
-		response = auth.logout();
 
 class TutuFunctionalTests(unittest.TestCase):
 	def setUp(self):

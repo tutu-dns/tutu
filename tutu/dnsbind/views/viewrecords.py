@@ -8,18 +8,11 @@ import dns.rdata, dns.rdataset;
 from tutu import tutuconfig
 
 from tutu.dnsbind.namedconfparser import NamedConfParser
+from tutu.dnsbind import record as tuturecord, zone as tutuzone;
 from tutu.viewbase import ViewBase
 from tutu import tutuconfig;
-from tutu.dnsbind.recordhelpers import helpers
 
-class Records(ViewBase):
-	
-	forward_supported_types = ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'TXT', 'SRV'];
-	reverse_supported_types = ['PTR', 'NS'];
-	
-	def __init__(self, request):
-		super().__init__(request);
-		self.helpers = helpers;
+class ViewRecords(ViewBase):
 	
 	@view_config(route_name='record_edit', renderer='tutu:templates/record-edit.pt', permission='record.edit')
 	def edit(self):
@@ -85,7 +78,7 @@ class Records(ViewBase):
 			record.append(tmprec);
 		
 		return {'rname': rname, 'pname':pname, 'rzone': rzone, 'rtype': rtype, 'rvalue': rvalue,
-						'record': record, 'helpers':self.helpers, 'errors': errors, 'newrecord': False};
+						'record': record, 'helpers':tuturecord.helpers, 'errors': errors, 'newrecord': False};
 	
 	@view_config(route_name='record_create', renderer='tutu:templates/record-edit.pt', permission='record.edit')
 	def create(self):
@@ -100,11 +93,10 @@ class Records(ViewBase):
 			print('Type');
 			return HTTPFound(location='/zone/{}'.format(rzone));
 		
-		import tutu.dnsbind.zones;
-		if tutu.dnsbind.zones.Zones(None).is_reverse(rzone):
-			types = self.reverse_supported_types;
+		if tutuzone.is_reverse(rzone):
+			types = tuturecord.reverse_supported_types;
 		else:
-			types = self.forward_supported_types;
+			types = tuturecord.forward_supported_types;
 		
 		if not rtype in types:
 			print('WrongType');
@@ -128,7 +120,7 @@ class Records(ViewBase):
 			record.append({'name': slot, 'value': ''});
 		
 		return {'rname': '', 'pname':'', 'rzone': rzone, 'rtype': rtype,
-						'record': record, 'helpers':self.helpers, 'errors': errors, 'newrecord': True};
+						'record': record, 'helpers':tuturecord.helpers, 'errors': errors, 'newrecord': True};
 	
 	@view_config(route_name='record_save', renderer='tutu:templates/record-edit.pt', permission='record.edit')
 	def save(self):
@@ -190,11 +182,11 @@ class Records(ViewBase):
 					pname = rzone;
 				else:
 					pname = "{}.{}".format(rname, rzone);
+      
+				newrecord = oname == None;
 
-				print(record);
-
-				return {'rname': rname, 'pname':pname, 'rzone': rzone, 'rtype': rtype,
-					'record': record, 'helpers':self.helpers, 'errors': errors};
+				return {'rname': rname, 'pname':pname, 'rzone': rzone, 'rtype': rtype, 'newrecord': newrecord,
+					'record': record, 'helpers':tuturecord.helpers, 'errors': errors};
 
 			rdata = dns.rdata.get_rdata_class(rdc.from_text(rclass), rdt.from_text(rtype))(**params);
 

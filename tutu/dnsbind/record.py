@@ -1,5 +1,3 @@
-
-
 helpers = {};
 
 helpers['address'] = {'type': 'text', 'label': 'Address', 'help':''};
@@ -19,3 +17,6 @@ helpers['retry'] = {'type': 'number', 'label': 'Retry', 'help':'Retry value (sec
 helpers['expire'] = {'type': 'number', 'label': 'Expiration', 'help':'Expiration (seconds)'};
 helpers['minimum'] = {'type': 'number', 'label': 'Negative Caching time', 'help':'Previously called minttl'};
 
+    
+forward_supported_types = ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'TXT', 'SRV'];
+reverse_supported_types = ['PTR', 'NS'];

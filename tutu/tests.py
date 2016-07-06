@@ -10,8 +10,6 @@ class TutuViewTests(unittest.TestCase):
 	
 	def tearDown(self):
 		testing.tearDown();
-		if os.path.isfile('tutu.cfg.orig'):
-			shutil.move('tutu.cfg.orig', 'tutu.cfg');
 		
 	
 	def test_userlogin(self):
