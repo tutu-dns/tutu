@@ -2,6 +2,9 @@ import unittest
 
 from pyramid import testing
 
+import os,sys;
+sys.path.append(os.getcwd());
+
 class TutuViewTests(unittest.TestCase):
 	def setUp(self):
 		self.config = testing.setUp();
