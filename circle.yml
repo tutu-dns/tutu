@@ -6,6 +6,6 @@ test:
     - python testing/pre.py
   override:
     - py.test tutu/tests.py
-	  - py.test tutu/dnsbind/tests.py
+    - py.test tutu/dnsbind/tests.py
   post:
     - python testing/post.py
