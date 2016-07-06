@@ -8,6 +8,7 @@ requires = [
 	'dnspython3',
 	'sqlalchemy',
 	'configparser',
+	'bcrypt',
 ]
 
 setup(name='tutu',

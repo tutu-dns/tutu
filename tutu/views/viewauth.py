@@ -4,7 +4,7 @@ from pyramid.response import Response
 from pyramid import security
 from pyramid.httpexceptions import HTTPFound
 
-from tutu import database
+from tutu import database, auth
 
 class ViewAuth(ViewBase):
 	@view_config(route_name='auth_login', renderer='tutu:templates/login.pt', permission='auth.login')
@@ -14,7 +14,8 @@ class ViewAuth(ViewBase):
 		if self.request.method in ['POST', 'PUT']:
 			username = self.request.POST.get('username');
 			password = self.request.POST.get('password');
-			if database.check_login(username, password):
+			ae = auth.AuthEngine();
+			if ae.authenticate(username, password):
 				headers = security.remember(self.request, username);
 				try:
 					loc = self.request.session['nexturl'];
