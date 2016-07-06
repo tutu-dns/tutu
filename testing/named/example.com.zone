@@ -1,0 +1,9 @@
+$ORIGIN example.com
+$TTL 300
+@ 300 IN NS ns1.example.com.
+@ 300 IN MX 10 mail.example.com.
+@ 300 IN SOA ns1.example.com. hostmaster.example.com. 2015102901 30 120 2419200 604800
+@ 300 IN TXT "spf=~all"
+
+ns1 300 IN A 10.20.30.40
+mail 300 IN A 40.30.20.10
