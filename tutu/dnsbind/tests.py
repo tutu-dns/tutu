@@ -2,9 +2,6 @@ import unittest
 
 from pyramid import testing
 
-
-from tutu.dnsbind.views.viewrecords import ViewRecords
-
 class TutuViewTests(unittest.TestCase):
 	def setUp(self):
 		self.config = testing.setUp();
