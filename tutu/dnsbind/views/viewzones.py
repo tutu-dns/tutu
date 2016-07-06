@@ -6,6 +6,7 @@ from tutu.dnsbind import zone as tutuzone, record as tuturecord;
 from dns import rdatatype as rdt, rdataclass as rdc;
 import dns.zone, dns.name;
 import re
+import os
 from tutu import tutuconfig;
 import datetime;
 from pyramid.httpexceptions import HTTPFound, HTTPForbidden
@@ -126,4 +127,19 @@ class ViewZones(ViewBase):
 		keys = ['name', 'mname', 'rname', 'refresh', 'retry', 'expire', 'minimum', 'ns'];
 		
 		return {'zone': zone, 'keys': keys, 'helpers': helpers};
+	
+	@view_config(route_name='zone_delete', renderer='tutu:templates/zone-create.pt', permission='zone.create')
+	def delete(self):
+		if self.posted():
+			zname = self.request.POST['zonename'];
+
+			namedconf = tutuconfig.get('namedconf', 'dnsbind');
+			ncp = NamedConfParser();
+			ncp.from_file(namedconf);
+			zonefile = ncp.find_zone_file(zname);
+			os.remove(zonefile);
+			ncp.delete_zone(zname);
+			ncp.to_file(namedconf);
+			return HTTPFound('/zones');
+		
 # vim: set ts=2:

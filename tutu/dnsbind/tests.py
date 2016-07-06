@@ -48,8 +48,25 @@ class TutuFunctionalTests(unittest.TestCase):
 	
 	def test_zonelist(self):
 		res = self.testapp.get('/zones', status=200);
+	
+	def test_zonecreate(self):
+		res = self.testapp.get('/zone/create', status=200);
+		res = self.testapp.post('/zone/create', params={
+				'name': 'test.example.com',
+				'mname': 'ns1.example.com.',
+				'rname': 'hostmaster.example.com.',
+				'refresh': 300,
+				'retry': 300,
+				'expire': 300,
+				'minimum': 300,
+				'ns': 'ns1.example.com.'
+			}, status=302);
+		res = self.testapp.get('/zone/test.example.com', status=200);
 		
 	def test_zoneshow(self):
 		res = self.testapp.get('/zone/example.com', status=200);
+		
+	def test_zonedelete(self):
+		res = self.testapp.post('/zone/delete', params={'zonename': 'test.example.com'}, status=302);
 
 # vim: set ts=2:

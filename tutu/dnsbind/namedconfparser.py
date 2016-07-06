@@ -47,14 +47,15 @@ class NamedConfParser:
 		if ztype != 'master':
 			raise NotImplementedError('Not implemented!');
 		
-		print(self._zones);
 		self._zones[zone] = {};
 		self._zones[zone]['filename'] = filename;
 		self._zones[zone]['type'] = ztype;
 	
+	def delete_zone(self, zone):
+		del(self._zones[zone]);
+	
 	def to_file(self, filename):
 		with open(filename, 'wt') as fw:
-			print(self._zones);
 			for zone in self._zones:
 				fw.write("zone \"{}\" IN {{\n".format(zone));
 				fw.write("\ttype {};\n".format(self._zones[zone]['type']));
