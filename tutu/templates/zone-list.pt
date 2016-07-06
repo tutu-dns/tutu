@@ -1,39 +1,41 @@
 <html metal:use-macro="load: base.pt">
 <div metal:fill-slot="pagetitle" tal:omit-tag="">Zones</div>
 <div metal:fill-slot="body">
-
-			<div class="row">
-				<div class="col-md-12">
-					<h1 class="page-head-line">Zones</h1>
-				</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h1 class="page-head-line">Zones</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="table-responsive table-bordered ">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Zone</th>
+							<th>Records</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr tal:repeat="zone zones">
+							<td>
+								<a href="/zone/${zone['name']}">
+									${zone['name']}
+								</a>
+							</td>
+							<td>
+								${zone['records']}
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-			<!-- /. ROW  -->
-			<div class="row">
-				<div class="col-md-12">
-					<div class="table-responsive table-bordered ">
-						<table class="table table-hover">
-							<thead>
-								<tr>
-									<th>Zone</th>
-									<th>Records</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr tal:repeat="zone zones">
-									<td>
-										<a href="/zone/${zone['name']}">
-											${zone['name']}
-										</a>
-									</td>
-									<td>
-										${zone['records']}
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+			<div class="btn-group" style="margin-top: 20px;">
+				<a class="btn btn-primary" href="/zone/create">
+					Add Zone
+				</a>
 			</div>
-				<!-- /. ROW  -->
+		</div>
+	</div>
 </div>
 </html>

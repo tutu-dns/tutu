@@ -13,7 +13,7 @@ def is_reverse(origin):
     return False;
 
 def _count_records(zonename):
-  namedconf = tutuconfig.get('namedconf');
+  namedconf = tutuconfig.get('namedconf', 'dnsbind');
   ncp = NamedConfParser();
   ncp.from_file(namedconf);
   zonefile = ncp.find_zone_file(zonename);
@@ -25,3 +25,13 @@ def _count_records(zonename):
       recordcount += len(rds.items);
 
   return recordcount;
+
+def save_zone(z, filename):
+	rzone = z.origin;
+	tmpfile = '/tmp/tutu-dns-tmp-{}'.format(rzone);
+	z.to_file(tmpfile);
+	fr = open(tmpfile, 'r');
+	with open(filename, 'wt') as fh:
+			fh.write("$ORIGIN {}\n$TTL 300\n".format(rzone));
+			for line in fr.readlines():
+				fh.write(line);

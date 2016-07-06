@@ -7,7 +7,8 @@ class TutuAuthorizationPolicy(authorization.ACLAuthorizationPolicy):
 		self._acls = {};
 		self._acls['zone'] = [
 			(security.Allow, security.Authenticated, 'list'),
-			(security.Allow, security.Authenticated, 'show')
+			(security.Allow, security.Authenticated, 'show'),
+			(security.Allow, security.Authenticated, 'create'),
 		];
 		self._acls['auth'] = [
 			(security.Allow, security.Everyone, 'login'),

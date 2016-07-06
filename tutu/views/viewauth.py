@@ -2,7 +2,7 @@ from tutu.viewbase import ViewBase
 from pyramid.view import view_config, forbidden_view_config
 from pyramid.response import Response
 from pyramid import security
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPForbidden
 
 from tutu import database, auth
 

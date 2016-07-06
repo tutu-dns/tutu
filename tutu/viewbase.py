@@ -18,6 +18,9 @@ class ViewBase:
 		self._menu.add_item(menu);
 		return
 	
+	def posted(self):
+		return self.request.method in ['POST', 'PUT']
+	
 	@property
 	def menu(self):
 		uri = self.request.path;

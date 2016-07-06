@@ -19,6 +19,7 @@ def main(global_config, **settings):
 	
 	config.add_route('home', '/');
 	
+	config.add_route('zone_create', '/zone/create');
 	config.add_route('zone_show', '/zone/{zone}');
 	config.add_route('zone_list', '/zones');
 	

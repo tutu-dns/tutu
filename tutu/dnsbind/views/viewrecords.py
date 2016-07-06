@@ -25,7 +25,7 @@ class ViewRecords(ViewBase):
 		
 		rvalue = self.request.params.get('value', None);
 		
-		namedconf = tutuconfig.get('namedconf');
+		namedconf = tutuconfig.get('namedconf', 'dnsbind');
 		ncp = NamedConfParser();
 		ncp.from_file(namedconf);
 		zonefile = ncp.find_zone_file(rzone);
@@ -125,7 +125,7 @@ class ViewRecords(ViewBase):
 	@view_config(route_name='record_save', renderer='tutu:templates/record-edit.pt', permission='record.edit')
 	def save(self):
 		values = {};
-		if self.request.method in ['POST', 'PUT']:
+		if self.posted():
 			new_record = False;
 			session = self.request.session;
 			try:
@@ -190,7 +190,7 @@ class ViewRecords(ViewBase):
 
 			rdata = dns.rdata.get_rdata_class(rdc.from_text(rclass), rdt.from_text(rtype))(**params);
 
-			namedconf = tutuconfig.get('namedconf');
+			namedconf = tutuconfig.get('namedconf', 'dnsbind');
 			ncp = NamedConfParser();
 			ncp.from_file(namedconf);
 			zonefile = ncp.find_zone_file(rzone);
@@ -220,13 +220,7 @@ class ViewRecords(ViewBase):
 					dset2.ttl = 300;
 					z.replace_rdataset(rname, dset2);
 
-			tmpfile = '/tmp/tutu-dns-tmp-';
-			z.to_file(tmpfile);
-			fr = open(tmpfile, 'r');
-			with open(zonefile, 'wt') as fh:
-					fh.write("$ORIGIN {}\n$TTL 300\n".format(rzone));
-					for line in fr.readlines():
-						fh.write(line);
+			tutuzone.save_zone(z, zonefile);
 			return HTTPFound(location='/zone/{}'.format(rzone));
 		else:
 			print("Not post or put");
@@ -247,7 +241,7 @@ class ViewRecords(ViewBase):
 			except NameError:
 				return HTTPFound('/zone/{}'.format(rzone));
 			
-			namedconf = tutuconfig.get('namedconf');
+			namedconf = tutuconfig.get('namedconf', 'dnsbind');
 			ncp = NamedConfParser();
 			ncp.from_file(namedconf);
 			zonefile = ncp.find_zone_file(rzone);
@@ -266,12 +260,8 @@ class ViewRecords(ViewBase):
 					else:
 						newdset.add(rd);
 			z.replace_rdataset(oname, newdset);
-			tmpfile = '/tmp/tutu-dns-tmp-';
-			z.to_file(tmpfile);
-			fr = open(tmpfile, 'r');
-			with open(zonefile, 'wt') as fh:
-					fh.write("$ORIGIN {}\n$TTL 300\n".format(rzone));
-					for line in fr.readlines():
-						fh.write(line);
+			
+			tutuzone.save_zone(z, zonefile);
+			
 			return HTTPFound('/zone/{}'.format(rzone));
 # vim: set ts=2:

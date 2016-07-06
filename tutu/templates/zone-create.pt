@@ -1,0 +1,27 @@
+<html metal:use-macro="load: base.pt">
+	<div metal:fill-slot="pagetitle" tal:omit-tag="">Create zone</div>
+	<div metal:fill-slot="body">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-info">
+					<div class="panel-heading">Create Zone</div>
+					<div class="panel-body">
+						<form role="form" action="/zone/create" method="post">
+							<div class="form-group" tal:repeat="attrib keys">
+								<label>${helpers[attrib]['label']}</label>
+								<input class="form-control" type="${helpers[attrib]['type']}" value="${zone[attrib]}" name="${attrib}" />
+								<p class="help-block">${helpers[attrib]['help']}</p>
+							</div>
+							<div class="form-group">
+								<input type="submit" class="btn btn-success" value="Create" />
+								<a class="btn btn-warning" href="/zones/">
+									Cancel
+								</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</html>
