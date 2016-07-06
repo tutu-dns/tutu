@@ -13,7 +13,7 @@ class ViewBase:
 		self._menu.add_item(menu);
 		
 		menu = MenuItem('DNS', 'globe', '#');
-		child = MenuItem('Zones', 'circle-o', '/zones', ['/zones', '/zone/.*']);
+		child = MenuItem('Zones', 'circle-o', '/zones', ['/zones', '/zone/.*', '/record/.*']);
 		menu.add_child(child);
 		self._menu.add_item(menu);
 		return

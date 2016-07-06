@@ -1,11 +1,5 @@
 <html metal:use-macro="load: base.pt">
-<div metal:fill-slot="pagetitle" tal:omit-tag="" tal:condition="newrecord==True">Create ${rtype} record</div>
-	<div tal:condition="newrecord==False">
-		<div metal:fill-slot="pagetitle" tal:omit-tag="">Edit ${rtype} record: ${pname}</div>
-	</div>
-	<div tal:condition="newrecord==True">
-		<div metal:fill-slot="pagetitle" tal:omit-tag="">Create ${rtype} record</div>
-	</div>
+	<div metal:fill-slot="pagetitle" tal:omit-tag="">${rtype} record ${pname}</div>
 	<div metal:fill-slot="body">
 		<div class="row">
 			<div class="col-md-12">
@@ -34,12 +28,20 @@
 							<div class="form-group">
 								<div tal:condition="newrecord==False" tal:omit-tag="">
 									<input type="submit" class="btn btn-success" value="Save" />
-									<a class="btn btn-danger" href="/record/delete?zone=${rzone}&name=${rname}&value=${rvalue}">
-										Delete Record
+									<a class="btn btn-warning" href="/zone/${rzone}">
+										Cancel
 									</a>
+									<div style="float: right">
+										<a class="btn btn-danger" href="/record/delete?zone=${rzone}&name=${rname}&value=${rvalue}">
+											Delete Record
+										</a>
+									</div>
 								</div>
 								<div tal:condition="newrecord==True" tal:omit-tag="">
 									<input type="submit" class="btn btn-success" value="Create" />
+									<a class="btn btn-warning" href="/zone/${rzone}">
+										Cancel
+									</a>
 								</div>
 							</div>
 						</form>
