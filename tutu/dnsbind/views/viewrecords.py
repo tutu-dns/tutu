@@ -1,6 +1,6 @@
 from pyramid.response import Response
 from pyramid.view import view_config
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPBadRequest
 import dns.name
 from dns import rdatatype as rdt, rdataclass as rdc
 from dns import node, zone
@@ -24,29 +24,15 @@ class ViewRecords(ViewBase):
 			return HTTPFound(location='/zones');
 		
 		rvalue = self.request.params.get('value', None);
+		origin = dns.name.from_text(rzone);
 		
-		namedconf = tutuconfig.get('namedconf', 'dnsbind');
-		ncp = NamedConfParser();
-		ncp.from_file(namedconf);
-		zonefile = ncp.find_zone_file(rzone);
+		z = tutuzone.Zone(rzone);
+		z.load();
 		
-		z = zone.from_file(zonefile);
-		
-		foundrecord = False;
-		
-		dset = z.get_rdataset(rname, rtype);
-		if rtype == 'SOA':
-			recorddata = dset.items[0];
-			foundrecord = True;
-		else:
-			for rdata in dset.items:
-				if rdata.to_text() == rvalue:
-					foundrecord = True;
-					recorddata = rdata;
-			
-		if not foundrecord:
-			#return HTTPFound(location='/');
-			pass
+		record = z.find_record(rname, rtype, rvalue);
+		recorddata = record.to_rdata(origin=origin);
+		if recorddata is None:
+			return HTTPFound('/zone/{}'.format(rzone));
 
 		if rname == '@':
 			pname = rzone;
@@ -58,8 +44,8 @@ class ViewRecords(ViewBase):
 		session['rzone'] = rzone;
 		session['rname'] = rname;
 		session['rtype'] = rtype;
-		session['rdata'] = recorddata.to_text();
-		session['rclass'] = rdc.to_text(dset.rdclass);
+		session['rdata'] = recorddata.to_text(origin=origin);
+		session['rclass'] = 'IN';
 		session.changed();
 		
 		errors = {};
@@ -67,6 +53,8 @@ class ViewRecords(ViewBase):
 		
 		record = [];
 		for attrib in recorddata.__slots__:
+			if attrib == 'serial':
+				continue;
 			errors[attrib] = 0;
 			tmprec = {};
 			tmprec['name'] = attrib;
@@ -85,21 +73,20 @@ class ViewRecords(ViewBase):
 		rzone = self.request.params.get('zone', None);
 		
 		if rzone is None:
-			print('Zone');
 			return HTTPFound(location='/zones');
 		
 		rtype = self.request.params.get('type', None);
 		if rtype is None:
-			print('Type');
 			return HTTPFound(location='/zone/{}'.format(rzone));
 		
-		if tutuzone.is_reverse(rzone):
-			types = tuturecord.reverse_supported_types;
+		z = tutuzone.Zone(rzone);
+		
+		if z.is_reverse():
+			types = tuturecord.Record.reverse_supported_types;
 		else:
-			types = tuturecord.forward_supported_types;
+			types = tuturecord.Record.forward_supported_types;
 		
 		if not rtype in types:
-			print('WrongType');
 			return HTTPFound(location='/zone/{}'.format(rzone));
 		
 		session = self.request.session;
@@ -143,6 +130,7 @@ class ViewRecords(ViewBase):
 			
 			if oname is None:
 				new_record = True;
+			
 			errors = {};
 			errors['name'] = 0;
 			rname = self.request.POST['name'];
@@ -164,15 +152,14 @@ class ViewRecords(ViewBase):
 				if len(self.request.POST[data]) == 0:
 					errors[data] = 1;
 					continue;
-				if data in ('mname', 'rname', 'target', 'exchange'):
-					params[data] = dns.name.from_text(self.request.POST[data]);
-				elif data in ('serial', 'refresh', 'retry', 'expire',
+				"""if data in ('mname', 'rname', 'target', 'exchange'):
+					params[data] = dns.name.from_text(self.request.POST[data]);"""
+				if data in ('serial', 'refresh', 'retry', 'expire',
 											'minimum', 'priority', 'preference', 'port'):
 					params[data] = int(self.request.POST[data]);
 				elif data != 'name':
 					params[data] = self.request.POST[data];
-			params['rdclass'] = rdc.from_text(rclass);
-			params['rdtype'] = rdt.from_text(rtype);
+			
 
 			errorcount = 0;
 			for error in errors:
@@ -188,42 +175,20 @@ class ViewRecords(ViewBase):
 				return {'rname': rname, 'pname':pname, 'rzone': rzone, 'rtype': rtype, 'newrecord': newrecord,
 					'record': record, 'helpers':tuturecord.helpers, 'errors': errors};
 
-			rdata = dns.rdata.get_rdata_class(rdc.from_text(rclass), rdt.from_text(rtype))(**params);
-
-			namedconf = tutuconfig.get('namedconf', 'dnsbind');
-			ncp = NamedConfParser();
-			ncp.from_file(namedconf);
-			zonefile = ncp.find_zone_file(rzone);
-
-			z = zone.from_file(zonefile);
+			r = tuturecord.Record(rtype, rclass);
+			for param in params:
+				setattr(r, param, params[param]);
 			
-			if not new_record:
-				dset = z.get_rdataset(oname, rtype);
-				newdset = dns.rdataset.Rdataset(rdc.from_text(rclass), rdt.from_text(rtype));
-				newdset.ttl = 300;
-				if rtype == 'SOA':
-					newdset.add(rdata);
-				else:
-					for rd in dset:
-						if odata == rd.to_text():
-							if oname == rname:
-								newdset.add(rdata);
-						else:
-							newdset.add(rd);
-				z.replace_rdataset(oname, newdset);
-
-			if oname != rname:
-					dset2 = z.get_rdataset(rname, rtype);
-					if dset2 is None:
-						dset2 = dns.rdataset.Rdataset(rdc.from_text(rclass), rdt.from_text(rtype));
-					dset2.add(rdata);
-					dset2.ttl = 300;
-					z.replace_rdataset(rname, dset2);
-
-			tutuzone.save_zone(z, zonefile);
+			z = tutuzone.Zone(rzone);
+			z.load();
+			
+			z.replace_record(oname, odata, rname, r);
+			
+			z.save();
+			
 			return HTTPFound(location='/zone/{}'.format(rzone));
 		else:
-			print("Not post or put");
+			return HTTPBadRequest();
 	
 	@view_config(route_name='record_delete', renderer='tutu:templates/record-edit.pt', permission='record.edit')
 	def delete(self):

@@ -53,9 +53,7 @@ class TutuFunctionalTests(unittest.TestCase):
 		
 		form = res.form;
 		form['username'] = 'admin';
-		print(form['username'].value);
 		form['password'] = 'changeme';
-		print(form['password'].value);
 		
 		res2 = form.submit();
 		self.assertEqual(res2.status, '302 Found');

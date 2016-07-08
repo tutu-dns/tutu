@@ -5,7 +5,9 @@ class NamedConfParser:
 	def __init__(self):
 		self._zones = {};
 	
-	def from_file(self, filename):
+	def from_file(self, filename=None):
+		if filename is None:
+			filename = tutuconfig.get('namedconf', 'dnsbind');
 		lines = [];
 		with open(filename, 'r') as fh:
 			lines.append(fh.read());

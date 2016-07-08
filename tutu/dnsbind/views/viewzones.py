@@ -15,9 +15,8 @@ class ViewZones(ViewBase):
 	
 	@view_config(route_name='zone_list', renderer='tutu:templates/zone-list.pt', permission='zone.list')
 	def list(self):
-		namedconf = tutuconfig.get('namedconf', 'dnsbind');
 		ncp = NamedConfParser();
-		ncp.from_file(namedconf);
+		ncp.from_file();
 		zones = ncp.find_zones();
 		rzones = [];
 		
@@ -30,32 +29,25 @@ class ViewZones(ViewBase):
 	@view_config(route_name='zone_show', renderer='tutu:templates/zone-show.pt', permission='zone.show')
 	def show(self):
 		zonename = self.request.matchdict['zone'];
-		namedconf = tutuconfig.get('namedconf', 'dnsbind');
-		ncp = NamedConfParser();
-		ncp.from_file(namedconf);
-		zonefile = ncp.find_zone_file(zonename);
 		
-		z = dns.zone.from_file(zonefile);
+		z = tutuzone.Zone(zonename);
+		z.load();
+		
+		#namedconf = tutuconfig.get('namedconf', 'dnsbind');
+		#ncp = NamedConfParser();
+		#ncp.from_file(namedconf);
+		#zonefile = ncp.find_zone_file(zonename);
+		
+		#z = dns.zone.from_file(zonefile);
 		
 		records = [];
 		
-		for nodename in z.nodes:
-			nodeval = z.nodes[nodename];
-			for dset in nodeval.rdatasets:
-				nodetype = rdt.to_text(dset.rdtype);
-				for rdata in dset.items:
-					record = {};
-					record['name'] = nodename.to_text();
-					record['type'] = nodetype;
-					rval = rdata.to_text();
-					record['value'] = rval;
-					record['ttl'] = dset.ttl;
-					records.append(record);
+		records = z.records;
 		
-		if tutuzone.is_reverse(z.origin):
-			rtypes = tuturecord.reverse_supported_types;
+		if z.is_reverse():
+			rtypes = tuturecord.Record.reverse_supported_types;
 		else:
-			rtypes = tuturecord.forward_supported_types;
+			rtypes = tuturecord.Record.forward_supported_types;
 		
 		return {'zonename': zonename, 'records':records, 'rtypes': rtypes};
 	
