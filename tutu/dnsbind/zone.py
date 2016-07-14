@@ -147,9 +147,7 @@ class Zone:
 	def add_record(self, rname, r):
 		if not type(r) == Record:
 			raise TypeError('Invalid record type');
-		if rname == '@' and r.get_type() == 'SOA':
-			self._getSOA();
-		
+			
 		rtype = r.get_type();
 		
 		try:
@@ -163,8 +161,14 @@ class Zone:
 				self._records[rname][rtype] = [];
 		except KeyError:
 				self._records[rname][rtype] = [];
-			
-		self._records[rname][rtype].append(r);
+		
+		if rname == '@' and rtype == 'SOA' and len(self._records[rname][rtype]) > 0:
+			self._records[rname][rtype][0] = r;
+		else:
+			self._records[rname][rtype].append(r);
+		
+		if rname == '@' and rtype == 'SOA':
+			self._getSOA();
 		return;
 	
 	def delete_record(self, rname, r):
@@ -194,6 +198,16 @@ class Zone:
 		if o is not None:
 			self.delete_record(oname, o);
 		self.add_record(rname, r);
+	
+	def count_records(self):
+		reccount = 0;
+		for rname in sorted(self._records):
+			for recname in self._records[rname]:
+				reccount += len(self._records[rname][recname]);
+		return reccount;
+	
+	def get_filename(self):
+		return self._filename or None;
 
 def _count_records(zonename):
   namedconf = tutuconfig.get('namedconf', 'dnsbind');

@@ -22,7 +22,9 @@ class ViewZones(ViewBase):
 		
 		
 		for zone in zones:
-			rzones.append({'name': zone, 'records': tutuzone._count_records(zone)});
+			z = tutuzone.Zone(zone);
+			z.load();
+			rzones.append({'name': zone, 'records': z.count_records()});
 		
 		return {'zones':rzones};
 	
@@ -32,13 +34,6 @@ class ViewZones(ViewBase):
 		
 		z = tutuzone.Zone(zonename);
 		z.load();
-		
-		#namedconf = tutuconfig.get('namedconf', 'dnsbind');
-		#ncp = NamedConfParser();
-		#ncp.from_file(namedconf);
-		#zonefile = ncp.find_zone_file(zonename);
-		
-		#z = dns.zone.from_file(zonefile);
 		
 		records = [];
 		
@@ -63,47 +58,32 @@ class ViewZones(ViewBase):
 			minimum = self.request.POST['minimum'];
 			nstarget = self.request.POST['ns'];
 			
-			today = datetime.date.today();
-			serial = '{}{}{}00'.format(today.year, today.month, today.day);
+			if zname[-1:] == '.':
+				zname = zname[:-1];
 			
-			z = dns.zone.Zone(dns.name.from_text(zname));
+			z = tutuzone.Zone(zname);
 			
-			soa = dns.rdata.get_rdata_class(rdc.from_text('IN'), rdt.from_text('SOA'))(
-				rdclass = rdc.from_text('IN'),
-				rdtype = rdt.from_text('SOA'),
-				mname = dns.name.from_text(mname),
-				rname = dns.name.from_text(rname),
-				serial = int(serial),
-				refresh = int(refresh),
-				retry = int(retry),
-				expire = int(expire),
-				minimum = int(minimum)
-			);
+			soa = tuturecord.Record('SOA');
+			soa.serial = 0;
+			soa.mname = mname;
+			soa.rname = rname;
+			soa.refresh = refresh;
+			soa.retry = retry;
+			soa.expire = expire;
+			soa.minimum = minimum;
 			
-			soaset = dns.rdataset.Rdataset(rdc.from_text('IN'), rdt.from_text('SOA'));
-			soaset.add(soa);
-			z.replace_rdataset('@', soaset);
+			z.add_record('@', soa);
 			
-			ns = dns.rdata.get_rdata_class(rdc.from_text('IN'), rdt.from_text('NS'))(
-				rdclass = rdc.from_text('IN'),
-				rdtype = rdt.from_text('NS'),
-				target = dns.name.from_text(nstarget)
-			);
+			ns = tuturecord.Record('NS');
+			ns.target = nstarget;
+			z.add_record('@', ns);
 			
-			nsset = dns.rdataset.Rdataset(rdc.from_text('IN'), rdt.from_text('NS'));
-			nsset.add(ns);
-			z.replace_rdataset('@', nsset);
-			
-			
-			zonefiles = tutuconfig.get('zonefiles', 'dnsbind');
-			zonefile = '{}{}.zone'.format(zonefiles, zname);
-			
-			tutuzone.save_zone(z, zonefile);
+			z.save();
 			
 			namedconf = tutuconfig.get('namedconf', 'dnsbind');
 			ncp = NamedConfParser();
 			ncp.from_file(namedconf);
-			ncp.add_zone(zname, zonefile);
+			ncp.add_zone(zname, z.get_filename());
 			ncp.to_file(namedconf);
 			
 			return HTTPFound('/zone/{}'.format(zname));
