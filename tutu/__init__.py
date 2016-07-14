@@ -32,8 +32,11 @@ def main(global_config, **settings):
 	config.add_route('auth_login', '/login');
 	config.add_route('auth_logout', '/logout');
 	
+	config.add_route('user_profile', '/profile');
+	
 	config.scan('.views.viewdashboard');
 	config.scan('.views.viewauth');
+	config.scan('.views.viewuser');
 	config.scan('.dnsbind.views.viewzones');
 	config.scan('.dnsbind.views.viewrecords');
 	config.add_static_view(name='assets', path='tutu:assets');

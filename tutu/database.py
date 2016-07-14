@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 import datetime;
+from tutu.auth import PasswordHasherBCrypt;
 
 def get_session():
 	return _DBSession();
@@ -12,6 +13,25 @@ def _init_db():
 	if _is_initialised():
 		return
 	Base.metadata.create_all(_engine);
+	
+	s = get_session();
+	
+	r = s.query(User).filter(User.uname == 'admin').all();
+	if len(r) < 1:
+		bc = PasswordHasherBCrypt();
+		salt = bc.salt();
+		pword = bc.encrypt('admin', salt);
+
+		u = User();
+		u.uname = 'admin';
+		u.pword = pword;
+		u.fname = 'Admin';
+		u.lname = '';
+		u.email = 'admin@localhost';
+		
+		s.add(u);
+		s.commit();
+	
 	return
 
 def _is_initialised():

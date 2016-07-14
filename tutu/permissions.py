@@ -16,9 +16,13 @@ class TutuAuthorizationPolicy(authorization.ACLAuthorizationPolicy):
 		];
 		self._acls['dashboard'] = [
 			(security.Allow, security.Authenticated, 'view'),
-		]
+		];
 		self._acls['record'] = [
 			(security.Allow, security.Authenticated, 'edit'),
+		];
+		self._acls['user'] = [
+			(security.Allow, security.Authenticated, 'profile'),
+			(security.Allow, security.Authenticated, 'list'),
 		]
 		
 	def permits(self, context, principals, permission):

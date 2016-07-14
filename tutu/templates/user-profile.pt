@@ -1,0 +1,49 @@
+<html metal:use-macro="load: base.pt">
+	<div metal:fill-slot="pagetitle" tal:omit-tag="">My Profile</div>
+	<div metal:fill-slot="body">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-info">
+					<div class="panel-heading">My Profile</div>
+					<div class="panel-body">
+						<form role="form" action="/profile" method="post">
+							<div class="form-group">
+								<label>Username</label>
+								<input class="form-control" type="text" disabled value="${uname}" />
+							</div>
+							<div class="form-group" tal:attributes="class python:errors['fname'] > 0 and 'has-error' or ''">
+								<label>First Name *</label>
+								<input class="form-control" type="text" value="${fname}" name="fname" />
+							</div>
+							<div class="form-group">
+								<label>Last Name</label>
+								<input class="form-control" type="text" value="${lname}" name="lname" />
+							</div>
+							<div class="form-group" tal:attributes="class python:errors['email'] > 0 and 'has-error' or ''">
+								<label>Email address *</label>
+								<input class="form-control" type="text" value="${email}" name="email" />
+							</div>
+							<div class="form-group" tal:attributes="class python:errors['curpw'] > 0 and 'has-error' or ''">
+								<label>Current Password *</label>
+								<input class="form-control" type="password" name="curpw" />
+								<p class="help-block">Enter your current password to save changes</p>
+							</div>
+							<div class="form-group">
+								<label>New Password</label>
+								<input class="form-control" type="password" name="newpw1" />
+								<p class="help-block">If you want to change your password, enter a new password here</p>
+							</div>
+							<div class="form-group">
+								<label>New Password (repeat)</label>
+								<input class="form-control" type="password" name="newpw2" />
+							</div>
+							<div class="form-group">
+								<input type="submit" class="btn btn-success" value="Save" />
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</html>
