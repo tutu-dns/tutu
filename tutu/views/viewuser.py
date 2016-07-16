@@ -55,6 +55,7 @@ class ViewUser(ViewBase):
 			
 				s.add(u);
 				s.commit();
+				self.success('Profile Updated');
 		
 		uname = u.uname;
 		fname = u.fname;

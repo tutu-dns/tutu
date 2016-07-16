@@ -6,6 +6,7 @@ class ViewBase:
 		self.request = request;
 		self._menu = MenuItemList();
 		self._populate_menu();
+		self._clear_messages();
 		return;
 		
 	def _populate_menu(self):
@@ -26,6 +27,38 @@ class ViewBase:
 		uri = self.request.path;
 		ret = self._menu.render(uri);
 		return ret;
+	
+	def _clear_messages(self):
+		self._messages = [];
+		return
+	
+	def set_message(self, msg, level='info'):
+		if level in ['success', 'info', 'warning', 'danger']:
+			self._messages.append({'msg': msg, 'level': level});
+			return True;
+		else:
+			return False;
+	
+	def has_messages(self):
+		return not self._messages == [];
+	
+	def get_messages(self):
+		if self._messages == []:
+			return None;
+		return self._messages;
+	messages = property(fget=get_messages);
+	
+	def error(self, msg):
+		return self.set_message(msg, 'danger');
+	
+	def info(self, msg):
+		return self.set_message(msg, 'info');
+	
+	def warning(self, msg):
+		return self.set_message(msg, 'warning');
+	
+	def success(self, msg):
+		return self.set_message(msg, 'success');
 
 class MenuItemList:
 	def __init__(self):

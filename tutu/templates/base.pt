@@ -29,7 +29,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="index.html">Tutu DNS</a>
+				<a class="navbar-brand" href="index.html">Tutu</a>
 			</div>
 
 			<div class="header-right">
@@ -84,6 +84,16 @@
 		<!-- /. NAV SIDE  -->
 		<div id="page-wrapper">
 			<div id="page-inner">
+				<div class="row" tal:condition="view.has_messages()">
+					<div class="col-md-12">
+						<div tal:omit-tag="" tal:repeat="message view.messages">
+							<div class="alert alert-${message['level']} alert-dismissable">
+								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+								${message['msg']}
+							</div>
+						</div>
+					</div>
+				</div>
 				<div metal:define-slot="body"></div>
 			</div>
 			<!-- /. PAGE INNER  -->
