@@ -18,7 +18,10 @@ class Zone:
 	def _getSOA(self):
 		try:
 			self._soa = self._records['@']['SOA'][0];
-			self._serial = self._soa.serial;
+			try:
+				self._serial = self._soa.serial;
+			except AttributeError:
+				pass
 		except (KeyError, IndexError):
 			return False;
 		return True;
@@ -51,7 +54,7 @@ class Zone:
 	
 	def to_file(self, filename):
 		today = datetime.date.today();
-		curser = int(self._soa.serial);
+		curser = int(self._serial);
 		newser = int('{}{}{}00'.format(today.year, str(today.month).zfill(2), str(today.day).zfill(2)));
 		while newser <= curser:
 			newser += 1;
@@ -101,6 +104,7 @@ class Zone:
 					rec['name'] = rname;
 					rec['type'] = rtype;
 					rec['value'] = record.to_text(origin=origin);
+					rec['relvalue'] = record.to_text();
 					rec['ttl'] = record.get_ttl();
 					
 					if rname == '@':
