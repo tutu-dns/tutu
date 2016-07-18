@@ -25,7 +25,7 @@ class TutuViewTests(unittest.TestCase):
 		expected = {'name': 'example.com', 'records': 6}
 		self.assertIn(expected, response['zones']);
 	
-	def test_zoneshow(self):
+	def test_zoneread(self):
 		from tutu.dnsbind.views.viewzones import ViewZones
 		
 		self.config.testing_securitypolicy(userid='admin', permissive=True);
@@ -33,7 +33,7 @@ class TutuViewTests(unittest.TestCase):
 		request = testing.DummyRequest(matchdict={'zone':'example.com'});
 		
 		zone = ViewZones(request);
-		response = zone.show();
+		response = zone.read();
 		self.assertIsInstance(response['records'], list);
 		self.assertEquals(len(response['records']), 6);
 		
@@ -47,11 +47,11 @@ class TutuFunctionalTests(unittest.TestCase):
 		self.testapp.post('/login', params={'username': 'admin', 'password': 'changeme'})
 	
 	def test_zonelist(self):
-		res = self.testapp.get('/zones', status=200);
+		res = self.testapp.get('/dns/zones', status=200);
 	
 	def test_zonecreate(self):
-		res = self.testapp.get('/zone/create', status=200);
-		res = self.testapp.post('/zone/create', params={
+		res = self.testapp.get('/dns/zone/create', status=200);
+		res = self.testapp.post('/dns/zone/create', params={
 				'name': 'test.example.com',
 				'mname': 'ns1.example.com.',
 				'rname': 'hostmaster.example.com.',
@@ -61,12 +61,12 @@ class TutuFunctionalTests(unittest.TestCase):
 				'minimum': 300,
 				'ns': 'ns1.example.com.'
 			}, status=302);
-		res = self.testapp.get('/zone/test.example.com', status=200);
+		res = self.testapp.get('/dns/zone/test.example.com', status=200);
 		
-	def test_zoneshow(self):
-		res = self.testapp.get('/zone/example.com', status=200);
+	def test_zoneread(self):
+		res = self.testapp.get('/dns/zone/example.com', status=200);
 		
 	def test_zonedelete(self):
-		res = self.testapp.post('/zone/delete', params={'zonename': 'test.example.com'}, status=302);
+		res = self.testapp.post('/dns/zone/delete', params={'zonename': 'test.example.com'}, status=302);
 
 # vim: set ts=2:

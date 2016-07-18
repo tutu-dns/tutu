@@ -51,6 +51,8 @@ class TutuFunctionalTests(unittest.TestCase):
 		res = self.testapp.get('/login', status=200);
 		self.assertIn(b'Please enter your details', res.body);
 		
+		print(res);
+		
 		form = res.form;
 		form['username'] = 'admin';
 		form['password'] = 'changeme';
