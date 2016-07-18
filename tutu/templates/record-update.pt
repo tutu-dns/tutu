@@ -4,10 +4,9 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-info">
-					<div class="panel-heading" tal:condition="newrecord==False">Edit ${rtype} record: ${pname}</div>
-					<div class="panel-heading" tal:condition="newrecord==True">Create ${rtype} record</div>
+					<div class="panel-heading">Edit ${rtype} record: ${pname}</div>
 					<div class="panel-body">
-						<form role="form" action="/dns/record/save" method="post">
+						<form role="form" action="/dns/record/update" method="post">
 							<div class="form-group">
 								<label>Record name</label>
 								<input class="form-control" type="text" value="${rname}" name="name" />
@@ -36,12 +35,6 @@
 											Delete Record
 										</a>
 									</div>
-								</div>
-								<div tal:condition="newrecord==True" tal:omit-tag="">
-									<input type="submit" class="btn btn-success" value="Create" />
-									<a class="btn btn-warning" href="/dns/zone/${rzone}">
-										Cancel
-									</a>
 								</div>
 							</div>
 						</form>

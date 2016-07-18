@@ -24,8 +24,8 @@ def main(global_config, **settings):
 	config.add_route('zone_read', '/dns/zone/{zone}');
 	config.add_route('zone_list', '/dns/zones');
 	
-	config.add_route('record_edit', '/dns/record/edit');
-	config.add_route('record_save', '/dns/record/save');
+	#config.add_route('record_read', '/dns/record/read');
+	config.add_route('record_update', '/dns/record/update');
 	config.add_route('record_create', '/dns/record/create');
 	config.add_route('record_delete', '/dns/record/delete');
 	

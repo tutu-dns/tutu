@@ -18,7 +18,9 @@ class TutuAuthorizationPolicy(authorization.ACLAuthorizationPolicy):
 			(security.Allow, security.Authenticated, 'view'),
 		];
 		self._acls['record'] = [
-			(security.Allow, security.Authenticated, 'edit'),
+			(security.Allow, security.Authenticated, 'create'),
+			(security.Allow, security.Authenticated, 'update'),
+			(security.Allow, security.Authenticated, 'delete'),
 		];
 		self._acls['users'] = [
 			(security.Allow, security.Authenticated, 'profile'),

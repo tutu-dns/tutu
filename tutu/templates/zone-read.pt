@@ -21,10 +21,10 @@
 						<tbody>
 							<tr tal:repeat="record records">
 								<td>
-									<a tal:condition="not: record['type'] == 'SOA'" href="/dns/record/edit?zone=${zonename}&name=${record['name']}&type=${record['type']}&value=${record['relvalue']}">
+									<a tal:condition="not: record['type'] == 'SOA'" href="/dns/record/update?zone=${zonename}&name=${record['name']}&type=${record['type']}&value=${record['relvalue']}">
 										${record['name']}
 									</a>
-									<a tal:condition="record['type'] == 'SOA'" href="/dns/record/edit?zone=${zonename}&name=${record['name']}&type=${record['type']}">
+									<a tal:condition="record['type'] == 'SOA'" href="/dns/record/update?zone=${zonename}&name=${record['name']}&type=${record['type']}">
 										${record['name']}
 									</a>
 								</td>
