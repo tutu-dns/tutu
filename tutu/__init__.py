@@ -19,24 +19,29 @@ def main(global_config, **settings):
 	
 	config.add_route('home', '/');
 	
-	config.add_route('zone_create', '/zone/create');
-	config.add_route('zone_delete', '/zone/delete');
-	config.add_route('zone_show', '/zone/{zone}');
-	config.add_route('zone_list', '/zones');
+	config.add_route('zone_create', '/dns/zone/create');
+	config.add_route('zone_delete', '/dns/zone/delete');
+	config.add_route('zone_read', '/dns/zone/{zone}');
+	config.add_route('zone_list', '/dns/zones');
 	
-	config.add_route('record_edit', '/record/edit');
-	config.add_route('record_save', '/record/save');
-	config.add_route('record_create', '/record/create');
-	config.add_route('record_delete', '/record/delete');
+	config.add_route('record_edit', '/dns/record/edit');
+	config.add_route('record_save', '/dns/record/save');
+	config.add_route('record_create', '/dns/record/create');
+	config.add_route('record_delete', '/dns/record/delete');
 	
 	config.add_route('auth_login', '/login');
 	config.add_route('auth_logout', '/logout');
 	
-	config.add_route('user_profile', '/profile');
+	config.add_route('users_profile', '/profile');
+	config.add_route('users_list', '/settings/users');
+	config.add_route('users_create', '/settings/users/create');
+	config.add_route('users_update', '/settings/users/update');
+	config.add_route('users_read', '/settings/users/{user}');
+	
 	
 	config.scan('.views.viewdashboard');
 	config.scan('.views.viewauth');
-	config.scan('.views.viewuser');
+	config.scan('.views.viewusers');
 	config.scan('.dnsbind.views.viewzones');
 	config.scan('.dnsbind.views.viewrecords');
 	config.add_static_view(name='assets', path='tutu:assets');

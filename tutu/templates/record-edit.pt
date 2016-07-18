@@ -7,7 +7,7 @@
 					<div class="panel-heading" tal:condition="newrecord==False">Edit ${rtype} record: ${pname}</div>
 					<div class="panel-heading" tal:condition="newrecord==True">Create ${rtype} record</div>
 					<div class="panel-body">
-						<form role="form" action="/record/save" method="post">
+						<form role="form" action="/dns/record/save" method="post">
 							<div class="form-group">
 								<label>Record name</label>
 								<input class="form-control" type="text" value="${rname}" name="name" />
@@ -28,18 +28,18 @@
 							<div class="form-group">
 								<div tal:condition="newrecord==False" tal:omit-tag="">
 									<input type="submit" class="btn btn-success" value="Save" />
-									<a class="btn btn-warning" href="/zone/${rzone}">
+									<a class="btn btn-warning" href="/dns/zone/${rzone}">
 										Cancel
 									</a>
 									<div style="float: right">
-										<a class="btn btn-danger" href="/record/delete?zone=${rzone}&name=${rname}&value=${rvalue}">
+										<a class="btn btn-danger" href="/dns/record/delete?zone=${rzone}&name=${rname}&value=${rvalue}">
 											Delete Record
 										</a>
 									</div>
 								</div>
 								<div tal:condition="newrecord==True" tal:omit-tag="">
 									<input type="submit" class="btn btn-success" value="Create" />
-									<a class="btn btn-warning" href="/zone/${rzone}">
+									<a class="btn btn-warning" href="/dns/zone/${rzone}">
 										Cancel
 									</a>
 								</div>

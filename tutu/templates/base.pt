@@ -62,7 +62,7 @@
 								<span class="fa arrow" tal:condition="menuitem.has_children()"></span>
 							</a>
 						</div>
-						<ul class="nav nav-second-level collapse in" tal:condition="menuitem.has_children()">
+						<ul tal:condition="menuitem.has_children()" tal:attributes="class python:menuitem.activetop and 'nav nav-second-level collapse in' or 'nav nav-second-level collapse'">
 							<li tal:repeat="submenuitem menuitem.children">
 								<div tal:omit-tag="" tal:condition="submenuitem.active">
 									<a href="${submenuitem.href}" class="active-menu">

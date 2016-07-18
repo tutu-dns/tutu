@@ -1,9 +1,9 @@
 <html metal:use-macro="load: base.pt">
-<div metal:fill-slot="pagetitle" tal:omit-tag="">Zones</div>
+<div metal:fill-slot="pagetitle" tal:omit-tag="">Users</div>
 <div metal:fill-slot="body">
 	<div class="row">
 		<div class="col-md-12">
-			<h1 class="page-head-line">Zones</h1>
+			<h1 class="page-head-line">Users</h1>
 		</div>
 	</div>
 	<div class="row">
@@ -12,27 +12,27 @@
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th>Zone</th>
-							<th>Records</th>
+							<th>Username</th>
+							<th>Name</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr tal:repeat="zone zones">
+						<tr tal:repeat="user users">
 							<td>
-								<a href="/dns/zone/${zone['name']}">
-									${zone['name']}
+								<a href="/settings/users/${user.uname}">
+									${user.uname}
 								</a>
 							</td>
 							<td>
-								${zone['records']}
+								${user.fname} ${user.lname}
 							</td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			<div class="btn-group" style="margin-top: 20px;">
-				<a class="btn btn-primary" href="/dns/zone/create">
-					Add Zone
+				<a class="btn btn-primary" href="/settings/users/create">
+					Add User
 				</a>
 			</div>
 		</div>

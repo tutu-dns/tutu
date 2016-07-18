@@ -28,8 +28,8 @@ class ViewZones(ViewBase):
 		
 		return {'zones':rzones};
 	
-	@view_config(route_name='zone_show', renderer='tutu:templates/zone-show.pt', permission='zone.show')
-	def show(self):
+	@view_config(route_name='zone_read', renderer='tutu:templates/zone-read.pt', permission='zone.read')
+	def read(self):
 		zonename = self.request.matchdict['zone'];
 		
 		z = tutuzone.Zone(zonename);
@@ -86,7 +86,7 @@ class ViewZones(ViewBase):
 			ncp.add_zone(zname, z.get_filename());
 			ncp.to_file(namedconf);
 			
-			return HTTPFound('/zone/{}'.format(zname));
+			return HTTPFound('/dns/zone/{}'.format(zname));
 			
 		import copy
 		helpers = copy.copy(tuturecord.helpers);
@@ -112,6 +112,6 @@ class ViewZones(ViewBase):
 			os.remove(zonefile);
 			ncp.delete_zone(zname);
 			ncp.to_file(namedconf);
-			return HTTPFound('/zones');
+			return HTTPFound('/dns/zones');
 		
 # vim: set ts=2:

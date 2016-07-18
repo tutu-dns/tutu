@@ -21,10 +21,10 @@
 						<tbody>
 							<tr tal:repeat="record records">
 								<td>
-									<a tal:condition="not: record['type'] == 'SOA'" href="/record/edit?zone=${zonename}&name=${record['name']}&type=${record['type']}&value=${record['relvalue']}">
+									<a tal:condition="not: record['type'] == 'SOA'" href="/dns/record/edit?zone=${zonename}&name=${record['name']}&type=${record['type']}&value=${record['relvalue']}">
 										${record['name']}
 									</a>
-									<a tal:condition="record['type'] == 'SOA'" href="/record/edit?zone=${zonename}&name=${record['name']}&type=${record['type']}">
+									<a tal:condition="record['type'] == 'SOA'" href="/dns/record/edit?zone=${zonename}&name=${record['name']}&type=${record['type']}">
 										${record['name']}
 									</a>
 								</td>
@@ -41,12 +41,12 @@
 					</button>
 					<ul class="dropdown-menu">
 						<li tal:repeat="rtype rtypes">
-							<a href="/record/create?type=${rtype}&zone=${zonename}">${rtype}</a>
+							<a href="/dns/record/create?type=${rtype}&zone=${zonename}">${rtype}</a>
 						</li>
 					</ul>
 				</div>
 				<div class="btn-group" style="float:right; margin-top: 20px;">
-					<form name="delform" action="/zone/delete" method="post" onsubmit="return confirm('This will delete the zone permanently');">
+					<form name="delform" action="/dns/zone/delete" method="post" onsubmit="return confirm('This will delete the zone permanently');">
 						<input type="hidden" name="zonename" value="${zonename}" />
 						<input type="submit" class="btn btn-danger" value="Delete Zone" />
 					</form>

@@ -1,0 +1,45 @@
+<html metal:use-macro="load: base.pt">
+	<div metal:fill-slot="pagetitle" tal:omit-tag="">User: ${user.uname}</div>
+	<div metal:fill-slot="body">
+	<div class="row">
+		<div class="col-md-12">
+			<h1 class="page-head-line">User: ${user.uname}</h1>
+		</div>
+	</div>
+		<div class="row">
+			<div class="col-md-12">
+				<form role="form" action="/settings/users/update" method="post">
+					<div class="form-group">
+						<label>Username</label>
+						<input type="hidden" name="uname" value="${user.uname}" />
+						<input class="form-control" type="text" disabled value="${user.uname}" />
+					</div>
+					<div class="form-group" tal:attributes="class python:errors['fname'] > 0 and 'has-error' or ''">
+						<label>First Name *</label>
+						<input class="form-control" type="text" value="${user.fname}" name="fname" />
+					</div>
+					<div class="form-group">
+						<label>Last Name</label>
+						<input class="form-control" type="text" value="${user.lname}" name="lname" />
+					</div>
+					<div class="form-group" tal:attributes="class python:errors['email'] > 0 and 'has-error' or ''">
+						<label>Email address *</label>
+						<input class="form-control" type="text" value="${user.email}" name="email" />
+					</div>
+					<div class="form-group">
+						<label>New Password</label>
+						<input class="form-control" type="password" name="newpw1" />
+						<p class="help-block">If you want to change the user's password, enter a new password here</p>
+					</div>
+					<div class="form-group">
+						<label>New Password (repeat)</label>
+						<input class="form-control" type="password" name="newpw2" />
+					</div>
+					<div class="form-group">
+						<input type="submit" class="btn btn-success" value="Save" />
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</html>

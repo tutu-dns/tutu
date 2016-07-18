@@ -32,7 +32,7 @@ class ViewRecords(ViewBase):
 		record = z.find_record(rname, rtype, rvalue);
 		recorddata = record.to_rdata(origin=origin);
 		if recorddata is None:
-			return HTTPFound('/zone/{}'.format(rzone));
+			return HTTPFound('/dns/zone/{}'.format(rzone));
 
 		if rname == '@':
 			pname = rzone;
@@ -73,11 +73,11 @@ class ViewRecords(ViewBase):
 		rzone = self.request.params.get('zone', None);
 		
 		if rzone is None:
-			return HTTPFound(location='/zones');
+			return HTTPFound(location='/dns/zones');
 		
 		rtype = self.request.params.get('type', None);
 		if rtype is None:
-			return HTTPFound(location='/zone/{}'.format(rzone));
+			return HTTPFound(location='/dns/zone/{}'.format(rzone));
 		
 		z = tutuzone.Zone(rzone);
 		
@@ -87,7 +87,7 @@ class ViewRecords(ViewBase):
 			types = tuturecord.Record.forward_supported_types;
 		
 		if not rtype in types:
-			return HTTPFound(location='/zone/{}'.format(rzone));
+			return HTTPFound(location='/dns/zone/{}'.format(rzone));
 		
 		session = self.request.session;
 		session['rzone'] = rzone;
@@ -118,7 +118,7 @@ class ViewRecords(ViewBase):
 			try:
 				rzone = session['rzone'];
 			except NameError:
-				return HTTPFound('/zones');
+				return HTTPFound('/dns/zones');
 			
 			try:
 				oname = session['rname'];
@@ -126,7 +126,7 @@ class ViewRecords(ViewBase):
 				odata = session['rdata'];
 				rclass = session['rclass'];
 			except NameError:
-				return HTTPFound('/zone/{}'.format(rzone));
+				return HTTPFound('/dns/zone/{}'.format(rzone));
 			
 			if oname is None:
 				new_record = True;
@@ -186,7 +186,7 @@ class ViewRecords(ViewBase):
 			
 			z.save();
 			
-			return HTTPFound(location='/zone/{}'.format(rzone));
+			return HTTPFound(location='/dns/zone/{}'.format(rzone));
 		else:
 			return HTTPBadRequest();
 	
@@ -196,7 +196,7 @@ class ViewRecords(ViewBase):
 			try:
 				rzone = session['rzone'];
 			except NameError:
-				return HTTPFound('/zones');
+				return HTTPFound('/dns/zones');
 			
 			try:
 				oname = session['rname'];
@@ -204,7 +204,7 @@ class ViewRecords(ViewBase):
 				odata = session['rdata'];
 				rclass = session['rclass'];
 			except NameError:
-				return HTTPFound('/zone/{}'.format(rzone));
+				return HTTPFound('/dns/zone/{}'.format(rzone));
 			
 			namedconf = tutuconfig.get('namedconf', 'dnsbind');
 			ncp = NamedConfParser();
@@ -228,5 +228,5 @@ class ViewRecords(ViewBase):
 			
 			tutuzone.save_zone(z, zonefile);
 			
-			return HTTPFound('/zone/{}'.format(rzone));
+			return HTTPFound('/dns/zone/{}'.format(rzone));
 # vim: set ts=2:

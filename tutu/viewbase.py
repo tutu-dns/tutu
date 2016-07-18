@@ -14,8 +14,14 @@ class ViewBase:
 		self._menu.add_item(menu);
 		
 		menu = MenuItem('DNS', 'globe', '#');
-		child = MenuItem('Zones', 'circle-o', '/zones', ['/zones', '/zone/.*', '/record/.*']);
+		child = MenuItem('Zones', 'circle-o', '/dns/zones', ['/dns/zones', '/dns/zone/.*', '/dns/record/.*']);
 		menu.add_child(child);
+		self._menu.add_item(menu);
+		
+		menu = MenuItem('Settings', 'cog', '#');
+		child1 = MenuItem('Users', 'user', '/settings/users', ['/settings/users', '/settings/users/.*']);
+		child2 = MenuItem('Groups', 'users', '/settings/groups');
+		menu.add_children(child1, child2);
 		self._menu.add_item(menu);
 		return
 	
@@ -99,6 +105,12 @@ class MenuItem:
 		if not type(child) == MenuItem:
 			raise Exception();
 		self._children.append(child);
+	
+	def add_children(self, *args):
+		if args is None:
+			return False;
+		for arg in args:
+			self.add_child(arg);
 	
 	def add_active_uri(self, uri):
 		self._activeuris.append(uri);

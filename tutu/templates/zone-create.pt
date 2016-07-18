@@ -6,7 +6,7 @@
 				<div class="panel panel-info">
 					<div class="panel-heading">Create Zone</div>
 					<div class="panel-body">
-						<form role="form" action="/zone/create" method="post">
+						<form role="form" action="/dns/zone/create" method="post">
 							<div class="form-group" tal:repeat="attrib keys">
 								<label>${helpers[attrib]['label']}</label>
 								<input class="form-control" type="${helpers[attrib]['type']}" value="${zone[attrib]}" name="${attrib}" />
@@ -14,7 +14,7 @@
 							</div>
 							<div class="form-group">
 								<input type="submit" class="btn btn-success" value="Create" />
-								<a class="btn btn-warning" href="/zones/">
+								<a class="btn btn-warning" href="/dns/zones/">
 									Cancel
 								</a>
 							</div>

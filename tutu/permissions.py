@@ -7,7 +7,7 @@ class TutuAuthorizationPolicy(authorization.ACLAuthorizationPolicy):
 		self._acls = {};
 		self._acls['zone'] = [
 			(security.Allow, security.Authenticated, 'list'),
-			(security.Allow, security.Authenticated, 'show'),
+			(security.Allow, security.Authenticated, 'read'),
 			(security.Allow, security.Authenticated, 'create'),
 		];
 		self._acls['auth'] = [
@@ -20,11 +20,13 @@ class TutuAuthorizationPolicy(authorization.ACLAuthorizationPolicy):
 		self._acls['record'] = [
 			(security.Allow, security.Authenticated, 'edit'),
 		];
-		self._acls['user'] = [
+		self._acls['users'] = [
 			(security.Allow, security.Authenticated, 'profile'),
 			(security.Allow, security.Authenticated, 'list'),
+			(security.Allow, security.Authenticated, 'read'),
+			(security.Allow, security.Authenticated, 'create'),
+			(security.Allow, security.Authenticated, 'update'),
 		]
-		
 	def permits(self, context, principals, permission):
 		parts = re.search('([a-z_]+)\.([a-z_]+)', permission);
 		rel = parts.group(1);
